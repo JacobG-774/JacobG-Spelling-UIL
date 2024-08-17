@@ -48,8 +48,6 @@ def generate_and_play_word(word):
     temp_file.close()
     tts.save(temp_file.name)
 
-    time.sleep(1)
-
     audio_data = open(temp_file.name, 'rb').read()
 
     try:
