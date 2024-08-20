@@ -119,7 +119,7 @@ def contest():
                 timestamp = int(time.time())
                 audio_url = f"/pronounce?timestamp={timestamp}"
 
-                return render_template("contest.html", current_word_idx=current_word_idx, total_words=len(main_contest_words), feedback=feedback, audio_data=audio_data, audio_url=audio_url)
+                return render_template("contest.html", current_word_idx=current_word_idx, total_words=len(main_contest_words), feedback=feedback, audio_data=audio_data, audio_url=audio_url, wrong_words=wrong_words)
 
         else:
             wrong_words.append((main_contest_words[current_word_idx], user_input))
@@ -129,7 +129,7 @@ def contest():
             timestamp = int(time.time())
             audio_url = f"/pronounce?timestamp={timestamp}"
 
-            return render_template("contest.html", current_word_idx=current_word_idx, total_words=len(main_contest_words), feedback=feedback, audio_data=audio_data, audio_url=audio_url)
+            return render_template("contest.html", current_word_idx=current_word_idx, total_words=len(main_contest_words), feedback=feedback, audio_data=audio_data, audio_url=audio_url, wrong_words=wrong_words)
         else:
             return redirect(url_for("index"))
 
@@ -138,7 +138,7 @@ def contest():
         timestamp = int(time.time())
         audio_url = f"/pronounce?timestamp={timestamp}"
 
-        return render_template("contest.html", current_word_idx=current_word_idx, total_words=len(main_contest_words), feedback=None, audio_data=audio_data, audio_url=audio_url)
+        return render_template("contest.html", current_word_idx=current_word_idx, total_words=len(main_contest_words), feedback=None, audio_data=audio_data, audio_url=audio_url, wrong_words=wrong_words)
     else:
         return redirect(url_for("index"))
 
