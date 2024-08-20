@@ -82,7 +82,6 @@
         }
         .accented-keyboard {
             position: absolute;
-            vertical-align: top;
             top: 10px;
             background-color: #777;
             padding: 10px;
@@ -187,12 +186,9 @@
 
         function insertAccent(accent) {
             var inputBox = document.getElementById('user_input');
-            var startPos = inputBox.selectionStart;
-            var endPos = inputBox.selectionEnd;
             var textBefore = inputBox.value.substring(0, startPos);
             var textAfter = inputBox.value.substring(endPos, inputBox.value.length);
             inputBox.value = textBefore + accent + textAfter;
-            inputBox.setSelectionRange(startPos + accent.length, startPos + accent.length);
             inputBox.focus();
         }
     </script>
