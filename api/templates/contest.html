@@ -68,6 +68,12 @@
             text-align: center;
             font-size: 14px;
         }
+        .incorrect {
+            position: absolute;
+            bottom: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
         .tip {
             margin-top: 20px;
             font-size: 14px;
@@ -131,7 +137,7 @@
     <div class="incorrect">
         <ul>
             {% for wrong_word in wrong_words %}
-                <li value="{{ wrong_word }}>wrong_word</li>
+                <li value="{{ wrong_word }}>{{ wrong_word }}</li>
             {% endfor %}
         </ul>
     </div>
