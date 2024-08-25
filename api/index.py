@@ -32,7 +32,7 @@ main_contest_words = []
 wrong_words = []
 
 # Select words for the contest
-def select_words(word_list, start_index, end_index, num_words=999):
+def select_words(word_list, start_index, end_index, num_words):
     if 1 <= start_index <= end_index <= len(word_list):
         selected_words = word_list[start_index - 1:end_index]
         random.shuffle(selected_words)
@@ -84,12 +84,13 @@ def index():
         filename = request.form["filename"]
         start_index = int(request.form["start_index"])
         end_index = int(request.form["end_index"])
+        num_words = int(request.form["num_words"])
         word_list = load_word_list(filename)
 
         if not word_list:
             return render_template("index.html", file_names=file_names, error_message=f"Failed to load word list from '{filename}'.")
 
-        main_contest_words = select_words(word_list, start_index, end_index, num_words=999)
+        main_contest_words = select_words(word_list, start_index, end_index, num_words)
         
         if not main_contest_words:
             return render_template("index.html", file_names=file_names, error_message=f"Failed to select words from '{filename}'. Please check your indices.")
