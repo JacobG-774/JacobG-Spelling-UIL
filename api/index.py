@@ -89,7 +89,7 @@ def index():
         if not word_list:
             return render_template("index.html", file_names=file_names, error_message=f"Failed to load word list from '{filename}'.")
 
-        main_contest_words = select_words(word_list, start_index, end_index, num_words=70)
+        main_contest_words = select_words(word_list, start_index, end_index, num_words=999)
         
         if not main_contest_words:
             return render_template("index.html", file_names=file_names, error_message=f"Failed to select words from '{filename}'. Please check your indices.")
