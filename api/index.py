@@ -32,7 +32,7 @@ main_contest_words = []
 wrong_words = []
 
 # Select words for the contest
-def select_words(word_list, start_index, end_index, num_words=70):
+def select_words(word_list, start_index, end_index, num_words=999):
     if 1 <= start_index <= end_index <= len(word_list):
         selected_words = word_list[start_index - 1:end_index]
         random.shuffle(selected_words)
