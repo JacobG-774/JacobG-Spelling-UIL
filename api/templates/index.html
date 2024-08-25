@@ -119,6 +119,9 @@
             <label for="end_index">End Index:</label>
             <input type="number" name="end_index" id="end_index" required>
             <br>
+            <label for="num_words">Number of words:</label>
+            <input type="number" name="num_words" id="num_words" required>
+            <br>
             <button type="submit">Start Contest</button>
         </form>
     </div>
@@ -130,6 +133,7 @@
         const rangeSlider = document.getElementById('range-slider');
         const startRange = document.getElementById('start_index');
         const endRange = document.getElementById('end_index');
+        const endRange = document.getElementById('num_words');
 
         const sliderRange = {
             min: 1,
