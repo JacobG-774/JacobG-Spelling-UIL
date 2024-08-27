@@ -103,7 +103,7 @@
             <input type="text" name="user_input" id="user_input" required autocomplete="off">
             <br>
             <button type="button" onclick="pronounce_word();">Pronounce</button>
-            <button type="button" onclick="alt_pronunciation();">Alternate Pronunciation</button>
+            <button type="button" onclick="pronounce_alt_word();">Alternate Pronunciation</button>
             <audio id="audio-player" controls style="display: none;">
                 <source src="{{ audio_url }}" type="audio/mpeg">
                 Your browser does not support the audio element.
@@ -170,10 +170,17 @@
             audio.load();
             audio.play();
         }
-
-        function alt_pronunciation() {
-            fetch('/alt_pronunciation').then(response => response.text()).then(data => console.log(data));
+        function pronounce_alt_word() {
+            var audio = document.getElementById('audio-player');
+            var audioUrl = "/altpronounce?" + new Date().getTime(); // Append a timestamp to the URL
+            audio.src = audioUrl;
+            audio.load();
+            audio.play();
         }
+
+        // function alt_pronunciation() {
+        //     fetch('/alt_pronunciation').then(response => response.text()).then(data => console.log(data));
+        // }
 
         window.addEventListener('load', function() {
             document.getElementById('user_input').focus();
