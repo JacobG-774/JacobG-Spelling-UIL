@@ -57,6 +57,24 @@ def generate_and_play_word(word):
 
     return audio_data
 
+# Generate and play word pronunciation
+def generate_and_play_word_alternate(word):
+    tts = gTTS(text=word, lang='en', tld='ca')
+    current_time = int(time.time())
+    temp_file = tempfile.NamedTemporaryFile(suffix=f"_{word}_{current_time}.mp3", delete=False)
+    temp_file.close()
+    tts.save(temp_file.name)
+
+    audio_data = open(temp_file.name, 'rb').read()
+
+    try:
+        os.remove(temp_file.name)
+    except PermissionError:
+        pass
+
+    return audio_data
+
+
 # Check user input against the correct word
 def check_word(user_input):
     global current_word_idx, main_contest_words
@@ -150,6 +168,18 @@ def pronounce_word():
     if current_word_idx < len(main_contest_words):
         word = main_contest_words[current_word_idx]
         audio_data = generate_and_play_word(word)
+        unique_id = int(time.time())
+        return send_file(io.BytesIO(audio_data), mimetype='audio/mpeg', as_attachment=True, download_name=f'pronunciation_{unique_id}.mp3')
+    else:
+        return send_file(io.BytesIO(b""), mimetype='audio/mpeg', as_attachment=True, download_name='pronunciation_placeholder.mp3')
+
+@app.route("/altpronounce")
+def alt_pronounce_word():
+    global current_word_idx, main_contest_words
+
+    if current_word_idx < len(main_contest_words):
+        word = main_contest_words[current_word_idx]
+        audio_data = generate_and_play_word_alternative(word)
         unique_id = int(time.time())
         return send_file(io.BytesIO(audio_data), mimetype='audio/mpeg', as_attachment=True, download_name=f'pronunciation_{unique_id}.mp3')
     else:
