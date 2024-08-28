@@ -33,5 +33,6 @@ A simple and intuitive web application that helps you study Spelling UIL words b
 ## Authors
 
 - [@Calc-oholic](https://www.github.com/Calc-oholic)
+- [@FollowedPlate](https://github.com/FollowedPlate)
 - [@A-Singh-er](https://www.github.com/A-Singh-er)
 - [Argyle HS Spelling Team](https://ahs.argyleisd.com)
