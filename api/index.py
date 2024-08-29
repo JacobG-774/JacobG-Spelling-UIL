@@ -59,7 +59,7 @@ def generate_and_play_word(word):
 
 # Generate and play word pronunciation
 def generate_and_play_word_alternate(word):
-    tts = gTTS(text=word, lang='en', tld='pt')
+    tts = gTTS(text=word, lang='en', tld='com.ng')
     current_time = int(time.time())
     temp_file = tempfile.NamedTemporaryFile(suffix=f"_{word}_{current_time}.mp3", delete=False)
     temp_file.close()
