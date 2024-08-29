@@ -179,7 +179,7 @@ def alt_pronounce_word():
 
     if current_word_idx < len(main_contest_words):
         word = main_contest_words[current_word_idx]
-        audio_data = generate_and_play_word_alternative(word)
+        audio_data = generate_and_play_word_alternate(word)
         unique_id = int(time.time())
         return send_file(io.BytesIO(audio_data), mimetype='audio/mpeg', as_attachment=True, download_name=f'pronunciation_{unique_id}.mp3')
     else:
