@@ -88,7 +88,7 @@ def check_word(user_input):
         else:
             checkFix = check
         
-        correct_words = [word.strip() for word in main_contest_words[current_word_idx].split(",")]
+        correct_words = [word.strip() for word in checkFix.split(",")]
         
         user_inputs = [input.strip() for input in user_input.split(",")]
 
