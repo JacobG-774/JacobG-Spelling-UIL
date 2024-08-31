@@ -80,14 +80,15 @@ def check_word(user_input):
     global current_word_idx, main_contest_words
 
     if current_word_idx < len(main_contest_words):
+      
         check = main_contest_words[current_word_idx]
         startPare = check.find('(')
-        if startPare>0:
+        if startPare> 0:
             checkFix = check[0:startPare-1]
         else:
             checkFix = check
         
-        correct_words = [word.strip() for word in checkFix.split(",")]
+        correct_words = [word.strip() for word in main_contest_words[current_word_idx].split(",")]
         
         user_inputs = [input.strip() for input in user_input.split(",")]
 
