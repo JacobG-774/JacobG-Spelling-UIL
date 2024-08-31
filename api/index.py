@@ -83,7 +83,8 @@ def check_word(user_input):
       
         check = main_contest_words[current_word_idx]
         startPare = check.find('(')
-        if startPare> 0:
+        checkFix = check
+        if startPare > 0:
             checkFix = check[0:startPare-1]
         else:
             checkFix = check
