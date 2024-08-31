@@ -82,8 +82,10 @@ def check_word(user_input):
     if current_word_idx < len(main_contest_words):
         check = main_contest_words[current_word_idx]
         startPare = check.index('(')
-        checkFix = check[0:startPare-1]
-        
+        if startPare>0:
+            checkFix = check[0:startPare-1]
+        else:
+            checkFix = len(check)
         correct_words = [word.strip() for word in checkFix.split(",")]
         
         user_inputs = [input.strip() for input in user_input.split(",")]
