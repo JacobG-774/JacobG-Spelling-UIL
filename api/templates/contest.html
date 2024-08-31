@@ -68,6 +68,13 @@
             text-align: center;
             font-size: 14px;
         }
+        .incorrect {
+            position: absolute;
+            top: 80px;
+            right: 0;
+            width: 200px;
+            height: 100px;
+        }
         .tip {
             margin-top: 20px;
             font-size: 14px;
@@ -75,12 +82,10 @@
         }
         .accented-keyboard {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
+            top: 10px;
             background-color: #777;
             padding: 10px;
             border-radius: 5px;
-            cursor: move;
         }
         .accented-keyboard button {
             font-size: 16px;
@@ -98,6 +103,7 @@
             <input type="text" name="user_input" id="user_input" required autocomplete="off">
             <br>
             <button type="button" onclick="pronounce_word();">Pronounce</button>
+            <button type="button" onclick="pronounce_alt_word();">Alternate Pronunciation</button>
             <audio id="audio-player" controls style="display: none;">
                 <source src="{{ audio_url }}" type="audio/mpeg">
                 Your browser does not support the audio element.
@@ -126,29 +132,35 @@
         </div>
     </div>
     <div class="tip">
-        <p><strong>Tip:</strong> Hold Shift and press Enter in the text box to pronounce the word.</p>
-        <p><strong>FYI:</strong> If multiple people try to use this service at once, it will break.<br>For a custom instance, please head to the <a href="https://github.com/AHStudying/Flask-Spelling-UIL/">repo</a> and follow the FREE SETUP INSTRUCTIONS.</p>
+        <p><strong>Tip:</strong> Hold Alt and press Enter in the text box to pronounce the word.</p>
     </div>
-    <div class="accented-keyboard" draggable="true" id="accentedKeyboard">
+    <div class="incorrect">
+        <ul>
+            {% for wrong_word in wrong_words %}
+                <li>{{ wrong_word }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="accented-keyboard" id="accentedKeyboard">
         <button onclick="insertAccent('á')">á</button>
         <button onclick="insertAccent('â')">â</button>
+        <button onclick="insertAccent('à')">à</button>
         <button onclick="insertAccent('é')">é</button>
         <button onclick="insertAccent('è')">è</button>
         <button onclick="insertAccent('ê')">ê</button>
         <button onclick="insertAccent('í')">í</button>
         <button onclick="insertAccent('î')">î</button>
+        <button onclick="insertAccent('ï')">ï</button>
         <button onclick="insertAccent('ó')">ó</button>
         <button onclick="insertAccent('ô')">ô</button>
+        <button onclick="insertAccent('ö')">ö</button>
         <button onclick="insertAccent('ú')">ú</button>
         <button onclick="insertAccent('ü')">ü</button>
         <button onclick="insertAccent('ñ')">ñ</button>
         <button onclick="insertAccent('ç')">ç</button>
-        <button onclick="insertAccent('ö')">ö</button>
-        <button onclick="insertAccent('ï')">ï</button>
-        <button onclick="insertAccent('à')">à</button>
     </div>
     <div class="credits">
-        <p>Credits to <a href="https://github.com/Calc-oholic/">Calc-oholic</a></p>
+        <p>Credits to <a href="https://github.com/Calc-oholic/">Calc-oholic</a> and <a href="https://github.com/FollowedPlate/">FollowedPlate</a></p>
     </div>
     <script>
         function pronounce_word() {
@@ -158,17 +170,24 @@
             audio.load();
             audio.play();
         }
-
-        function alt_pronunciation() {
-            fetch('/alt_pronunciation').then(response => response.text()).then(data => console.log(data));
+        function pronounce_alt_word() {
+            var audio = document.getElementById('audio-player');
+            var audioUrl = "/altpronounce?" + new Date().getTime(); // Append a timestamp to the URL
+            audio.src = audioUrl;
+            audio.load();
+            audio.play();
         }
+
+        // function alt_pronunciation() {
+        //     fetch('/alt_pronunciation').then(response => response.text()).then(data => console.log(data));
+        // }
 
         window.addEventListener('load', function() {
             document.getElementById('user_input').focus();
         });
 
         document.getElementById('user_input').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && e.shiftKey) {
+            if (e.key === 'Enter' && e.altKey) {
                 pronounce_word();
             }
         });
@@ -182,54 +201,6 @@
             inputBox.value = textBefore + accent + textAfter;
             inputBox.setSelectionRange(startPos + accent.length, startPos + accent.length);
             inputBox.focus();
-        }
-
-        dragElement(document.getElementById("accentedKeyboard"));
-
-        function dragElement(elmnt) {
-            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            if (document.getElementById(elmnt.id)) {
-                elmnt.onmousedown = dragMouseDown;
-            } else {
-                elmnt.onmousedown = dragMouseDown;
-            }
-
-            function dragMouseDown(e) {
-                e.preventDefault();
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
-            }
-
-            function elementDrag(e) {
-                e.preventDefault();
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-
-                var newTop = elmnt.offsetTop - pos2;
-                var newLeft = elmnt.offsetLeft - pos1;
-                var newBottom = newTop + elmnt.clientHeight;
-            
-                // Ensure the element stays within the viewport
-                if (newTop >= 0 && newBottom <= window.innerHeight) {
-                    elmnt.style.top = newTop + "px";
-                    elmnt.style.bottom = "auto";  // Reset 'bottom' to 'auto' when moving
-                }
-
-                // Ensure the element stays within the viewport horizontally
-                if (newLeft >= 0 && newLeft + elmnt.clientWidth <= window.innerWidth) {
-                    elmnt.style.left = newLeft + "px";
-                }
-            }
-
-
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
         }
     </script>
 </body>
