@@ -85,7 +85,8 @@ def check_word(user_input):
         if startPare>0:
             checkFix = check[0:startPare-1]
         else:
-            checkFix = len(check)
+            checkFix - check
+        
         correct_words = [word.strip() for word in checkFix.split(",")]
         
         user_inputs = [input.strip() for input in user_input.split(",")]
