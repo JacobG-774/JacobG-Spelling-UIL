@@ -28,7 +28,6 @@ def load_word_list(filename):
         return []
 
 current_word_idx = 0
-main_contest_word_IDS = []
 main_contest_words = []
 wrong_words = []
 
@@ -94,7 +93,8 @@ def check_word(user_input):
         #     checkFix = check[0:startPare-1]
         # else:
         #     checkFix = check
-        checkFix = main_contest_words[current_word_idx].split("(")[0].strip()
+        _, raw_word = main_contest_words[current_word_idx]
+        checkFix = raw_word.split("(")[0].strip()
         
         correct_words = [word.strip() for word in checkFix.split(",")]
         
@@ -125,7 +125,8 @@ def index():
             return render_template("index.html", file_names=file_names, error_message=f"Failed to load word list from '{filename}'.")
 
         main_contest_word_IDS = rng_word_ids(start_index, end_index, num_words)
-        main_contest_words = select_words(word_list, main_contest_word_IDS)
+        main_contest_words = [(id, word_list[id - 1]) for id in main_contest_word_IDS]
+
         
         if not main_contest_words or not main_contest_word_IDS:
             return render_template("index.html", file_names=file_names, error_message=f"Failed to select words from '{filename}'. Please check your indices.")
@@ -133,7 +134,8 @@ def index():
         current_word_idx = 0
         wrong_words = []
 
-        audio_data = get_and_play_word(main_contest_word_IDS[current_word_idx])
+        word_id, _ = main_contest_words[current_word_idx]
+        audio_data = get_and_play_word(word_id)
         return render_template("contest.html", current_word_idx=current_word_idx, total_words=len(main_contest_words), feedback=None, audio_data=audio_data, file_names=file_names)
 
     return render_template("index.html", file_names=file_names)
@@ -230,7 +232,7 @@ def alt_pronounce_word():
     global current_word_idx, main_contest_words
 
     if current_word_idx < len(main_contest_words):
-        word = main_contest_words[current_word_idx]
+        _, word = main_contest_words[current_word_idx]
         audio_data = generate_and_play_word_alternate(word)
         unique_id = int(time.time())
         return send_file(io.BytesIO(audio_data), mimetype='audio/mpeg', as_attachment=True, download_name=f'pronunciation_{unique_id}.mp3')
