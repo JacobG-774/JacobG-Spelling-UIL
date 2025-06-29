@@ -59,8 +59,7 @@ anchoress
 anemometer
 anion
 annotation
-annunciation,
-Annunciation
+annunciation, Annunciation
 anodyne
 anoxia
 antemortem
@@ -556,8 +555,7 @@ imperialism
 importunity
 impracticable
 impressionable
-impressionism,
-Impressionism
+impressionism, Impressionism
 impromptu
 imprudence
 imputable
@@ -840,8 +838,7 @@ obliquity
 obovate
 obscenity
 obsolescence
-occidentalize,
-Occidentalize
+occidentalize, Occidentalize
 octogenarian
 odalisque, odalisk
 oedipal, Oedipal
@@ -1070,8 +1067,7 @@ recalculate
 recapitulation
 recidivist
 recommendation
-reconstruction,
-Reconstruction
+reconstruction, Reconstruction
 recruitment
 recurrent
 Red Guard
@@ -1120,8 +1116,7 @@ revisionary
 rhesus monkey
 rhinencephalon
 Rhodes scholar
-rhododendron,
-Rhododendron
+rhododendron, Rhododendron
 rhodolite
 rhonchus
 rhyme royal
@@ -1183,8 +1178,7 @@ scapular
 scenarist
 scherzando
 schmatte
-scholasticism,
-Scholasticism
+scholasticism, Scholasticism
 sciaenid
 scintilla
 scire facias
@@ -1217,8 +1211,7 @@ serval
 sexcentenary
 Shabbat
 shaitan, Shaitan
-Shakespeareana,
-Shakespeariana
+Shakespeareana, Shakespeariana
 shalom
 Shangri-la
 Shekhinah
@@ -1338,8 +1331,7 @@ theorist
 theriomorphic
 thespian, Thespian
 third rail
-thoroughbred,
-Thoroughbred
+thoroughbred, Thoroughbred
 thrasonical
 thyroidectomy
 Tibet
@@ -1428,8 +1420,7 @@ ventifact
 ventilator
 venue
 verbigeration
-verd antique, verde
-antique
+verd antique, verde antique
 verisimilitude
 vermiculate
 verruca
