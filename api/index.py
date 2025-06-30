@@ -125,7 +125,11 @@ def index():
             return render_template("index.html", file_names=file_names, error_message=f"Failed to load word list from '{filename}'.")
 
         main_contest_word_IDS = rng_word_ids(start_index, end_index, num_words)
-        main_contest_words = [(id, word_list[id - 1]) for id in main_contest_word_IDS]
+        for id in main_contest_word_IDS:
+            if 0 < id <= len(word_list):
+                main_contest_words.append((id, word_list[id - 1]))
+            else:
+                print(f"Invalid ID: {id}")
 
         
         if not main_contest_words or not main_contest_word_IDS:
