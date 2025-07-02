@@ -195,14 +195,17 @@ def get_and_play_word(wordNum):
         subfolder_path = os.path.join(folder_path, "1000")
     elif 1000 < wordNum < 1501:
         subfolder_path = os.path.join(folder_path, "1500")
-    file_path = os.path.join(subfolder_path, str(wordNum) + ".mp3")
-    
+    file_path = os.path.join(subfolder_path, str(wordNum) + ".wav")
+    mp3_file_path = os.path.join(subfolder_path, str(wordNum) + ".mp3")
     error_file_path = os.path.join(folder_path, "noxious.mp3")
     
     try:
         audio_data = open(file_path, 'rb').read()
     except Exception:
-        audio_data = open(error_file_path, 'rb').read()
+        try:
+            audio_data = open(mp3_file_path, 'rb').read()
+        except:
+            audio_data = open(error_file_path, 'rb').read()
 
     if random.random() < .003:
         audio_data = open(error_file_path, 'rb').read()
