@@ -147,13 +147,14 @@ def index():
 # Inside the /contest route
 @app.route("/contest", methods=["GET", "POST"])
 def contest():
-    global current_word_idx, main_contest_words, wrong_words, main_contest_word_IDS
+    global current_word_idx, main_contest_words, wrong_words, main_contest_word_IDS, first_try
 
     if request.method == "POST":
         user_input = request.form["user_input"]
         feedback = check_word(user_input)
+        first_try = True
 
-        if feedback == True:
+        if feedback == True and first_try == True:
             current_word_idx += 1
 
             if current_word_idx < len(main_contest_words):
@@ -165,6 +166,7 @@ def contest():
 
         else:
             wrong_words.append((main_contest_words[current_word_idx], user_input))
+            first_try = False
 
         if current_word_idx < len(main_contest_words):
             audio_data = get_and_play_word(main_contest_word_IDS[current_word_idx])
