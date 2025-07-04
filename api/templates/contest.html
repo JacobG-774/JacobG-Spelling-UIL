@@ -160,7 +160,7 @@
         <button onclick="insertAccent('ç')">ç</button>
     </div>
     <div class="credits">
-        <p>Credits to <a href="https://github.com/Calc-oholic/">Calc-oholic</a> and <a href="https://github.com/FollowedPlate/">FollowedPlate</a></p>
+        <p>Credits to <a href="https://github.com/Calc-oholic/">Calc-oholic</a>, <a href="https://github.com/FollowedPlate/">FollowedPlate</a>, and <a href="https://github.com/JacobG-774/">Jacob G</a></p>
     </div>
     <script>
         function pronounce_word() {
@@ -190,6 +190,9 @@
             if (e.key === 'Enter' && e.altKey) {
                 pronounce_word();
             }
+            if (e.key === 'Enter' && e.ctrlKey) {
+                pronounce_alt_word();
+                
         });
 
         function insertAccent(accent) {
