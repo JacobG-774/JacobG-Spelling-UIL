@@ -100,7 +100,7 @@
         <form method="POST" action="{{ url_for('contest') }}">
             <h2>Word {{ current_word_idx + 1 }}/{{ total_words }}</h2>
             <label for="user_input">Type the word:</label>
-            <input type="text" name="user_input" id="user_input" required autocomplete="off">
+            <input type="text" name="user_input" id="user_input" required autocomplete="off" spellcheck="false">
             <br>
             <button type="button" onclick="pronounce_word();">Pronounce</button>
             <button type="button" onclick="pronounce_alt_word();">Alternate Pronunciation</button>
