@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file
+from flask import Flask, render_template, request, redirect, url_for, send_file, session
 import random
 from gtts import gTTS
 import os
@@ -9,6 +9,7 @@ import time
 app = Flask(__name__)
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+app.secret_key = 'adfj=(*&oiu412398oijknvaASD924897298@$@#@$oapisudjfkl)*(*^8'
 
 # Load word list
 def load_word_list(filename):
@@ -30,7 +31,7 @@ def load_word_list(filename):
 current_word_idx = 0
 main_contest_words = []
 wrong_words = []
-
+session['first_try'] = True
 
 # Select words for the contest
 def select_words(word_list, word_list_IDS):
