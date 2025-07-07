@@ -31,7 +31,6 @@ def load_word_list(filename):
 current_word_idx = 0
 main_contest_words = []
 wrong_words = []
-session['first_try'] = True
 
 # Select words for the contest
 def select_words(word_list, word_list_IDS):
