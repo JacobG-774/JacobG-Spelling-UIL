@@ -148,10 +148,11 @@ def index():
 @app.route("/contest", methods=["GET", "POST"])
 def contest():
     global current_word_idx, main_contest_words, wrong_words, main_contest_word_IDS, first_try
-
+    
+    if 'first_try' not in session:
+        session['first_try'] = True
+        
     if request.method == "POST":
-        if 'first_try' not in session:
-            session['first_try'] = True
         user_input = request.form["user_input"]
         feedback = check_word(user_input)
 
