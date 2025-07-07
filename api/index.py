@@ -157,6 +157,7 @@ def contest():
 
         if feedback == True and session['first_try']:
             current_word_idx += 1
+            session['first_try'] = True
 
             if current_word_idx < len(main_contest_words):
                 audio_data = get_and_play_word(main_contest_word_IDS[current_word_idx])
