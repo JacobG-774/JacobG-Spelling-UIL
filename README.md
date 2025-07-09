@@ -25,7 +25,6 @@ A simple and intuitive web application that helps you study Spelling UIL words b
 
 - Additional browser support
 - Add another voice for pronunciations
-- Incorrect pronunciations: 635
 
 ## Badges
 
