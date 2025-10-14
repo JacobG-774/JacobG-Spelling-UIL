@@ -30,6 +30,7 @@ def load_word_list(filename):
 current_word_idx = 0
 main_contest_words = []
 wrong_words = []
+badwords = []
 
 
 # Select words for the contest
@@ -218,19 +219,21 @@ def get_and_play_word(wordNum):
 
 @app.route("/pronounce")
 def pronounce_word():
-    global current_word_idx, main_contest_words, main_contest_word_IDS
+    global current_word_idx, main_contest_words, main_contest_word_IDS, badwords
 
     if current_word_idx < len(main_contest_words):
         # word = main_contest_words[current_word_idx]
 
 
         # audio_data = get_and_play_word(word)
-        
-        audio_data = get_and_play_word(main_contest_word_IDS[current_word_idx])
-
-
-        # unique_id = int(time.time())
-        return send_file(io.BytesIO(audio_data), mimetype='audio/mpeg', as_attachment=True, download_name=f'pronunciation_{current_word_idx}.mp3')
+        if main_contest_words[current_word_idx] in badwords:
+            #do some stuff
+        else:
+            audio_data = get_and_play_word(main_contest_word_IDS[current_word_idx])
+    
+    
+            # unique_id = int(time.time())
+            return send_file(io.BytesIO(audio_data), mimetype='audio/mpeg', as_attachment=True, download_name=f'pronunciation_{current_word_idx}.mp3')
     else:
         return send_file(io.BytesIO(b""), mimetype='audio/mpeg', as_attachment=True, download_name='pronunciation_placeholder.mp3')
 
@@ -248,3 +251,4 @@ def alt_pronounce_word():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
