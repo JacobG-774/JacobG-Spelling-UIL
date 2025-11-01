@@ -220,13 +220,14 @@ def get_and_play_word(wordNum):
 @app.route("/pronounce")
 def pronounce_word():
     global current_word_idx, main_contest_words, main_contest_word_IDS, badwords
+    _, raw_word = main_contest_words[current_word_idx]
 
     if current_word_idx < len(main_contest_words):
         # word = main_contest_words[current_word_idx]
 
 
         # audio_data = get_and_play_word(word)
-        if main_contest_words[current_word_idx] in badwords:
+        if raw_word in badwords:
             alt_pronounce_word()
         else:
             audio_data = get_and_play_word(main_contest_word_IDS[current_word_idx])
@@ -251,6 +252,7 @@ def alt_pronounce_word():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
