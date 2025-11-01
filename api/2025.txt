@@ -13,7 +13,7 @@ acclamation
 acculturation
 acequia
 Achates
-Achilles’ heel
+Achilles' heel
 acoustooptics
 acquittance
 acumen
@@ -184,10 +184,10 @@ chambered nautilus
 chamomile, camomile
 chancellor
 channelize
-chargé d’affaires
+chargé d'affaires
 chassepot
 chastise
-chef-d’oeuvre
+chef-d'oeuvre
 chemurgy
 chervil
 Chiang Kai-shek
@@ -246,7 +246,7 @@ corporeity
 corpsman
 corroborating
 cosmology
-Côte d’Ivoire
+Côte d'Ivoire
 counterfactual
 coup de grâce
 crampons
@@ -303,7 +303,7 @@ desiccate
 desipramine
 destabilization
 deuteranopia
-devil’s advocate
+devil's advocate
 devolatilize
 dhobi
 diachronic
@@ -526,7 +526,7 @@ histology
 histrionic
 hoisin sauce
 honorific
-hors d’oeuvre
+hors d'oeuvre
 howdah, houdah
 huckster
 humiliation
@@ -696,7 +696,7 @@ Maghreb, Maghrib
 magnetometer
 Maharashtra
 maillot
-maître d’hôtel
+maître d'hôtel
 majoritarianism
 mal de mer
 Malawi
@@ -751,7 +751,7 @@ micropipette
 Midas touch
 Midrash
 militarize
-miller’s thumb
+miller's thumb
 millipede, millepede
 minacious
 miniature schnauzer
@@ -767,7 +767,7 @@ missa cantata
 mitigate
 mobocratic
 modularized
-Molokai, Moloka’i
+Molokai, Moloka'i
 monastic
 Monet
 mongrelize
@@ -816,7 +816,7 @@ newsmagazine
 nidicolous
 Nietzsche
 nightmarishly
-nine days’ wonder
+nine days' wonder
 nitrogen narcosis
 nodose
 no-fault
@@ -844,7 +844,7 @@ odalisque, odalisk
 oedipal, Oedipal
 offensiveness
 offshore
-O’Keeffe
+O'Keeffe
 olecranon
 oleic acid
 oligopsony
@@ -1031,7 +1031,7 @@ Pyongyang
 pyriform
 pythonic
 Qattara Depression
-Qu’Appelle River
+Qu'Appelle River
 quadrennium
 quadriceps
 quadrumvirate
@@ -1154,7 +1154,7 @@ sacramentalism
 sacroiliac
 sage grouse
 saiga, Saiga
-saint’s day
+saint's day
 salad days
 salience
 sally lunn
@@ -1432,7 +1432,7 @@ Victoriana
 videophone
 vigoroso
 vinasse
-viper’s bugloss
+viper's bugloss
 viridescent
 vis major
 viscid
