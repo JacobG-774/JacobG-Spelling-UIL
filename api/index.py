@@ -224,8 +224,6 @@ def pronounce_word():
 
     if current_word_idx < len(main_contest_words):
         # word = main_contest_words[current_word_idx]
-
-
         # audio_data = get_and_play_word(word)
         if raw_word in badwords:
             return alt_pronounce_word()
@@ -252,6 +250,7 @@ def alt_pronounce_word():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
