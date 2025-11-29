@@ -111,7 +111,7 @@ def check_word(user_input):
 # Route for the home page
 @app.route("/", methods=["GET", "POST"])
 def index():
-    global current_word_idx, main_contest_words, main_contest_word_IDS, wrong_words
+    global current_word_idx, main_contest_words, main_contest_word_IDS, wrong_words, filename
 
     file_names = ["missedwords.txt", "2025.txt", "2024.txt", "2023.txt", "2022.txt", "2021.txt", "2020.txt", "2019.txt"]
 
@@ -250,6 +250,7 @@ def alt_pronounce_word():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
