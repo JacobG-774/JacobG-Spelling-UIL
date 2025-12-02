@@ -2,8 +2,6 @@
 
 A simple and intuitive web application that helps you study Spelling UIL words by pronouncing them for you while you type, and instantly checking your spelling. Select the word set you'd like to study and start improving your spelling skills right away!
 
-**Note:** As this application is hosted on Vercel, only one person can use it at a time, and so is an example. If you wish to have 24/7 access and a personal instance, please fork this repository and follow the setup instructions below.
-
 ## Features
 
 - Pronunciation of Spelling UIL words while typing
