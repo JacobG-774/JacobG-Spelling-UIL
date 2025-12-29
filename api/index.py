@@ -40,6 +40,7 @@ def save_missed_words(missed_words_list):
             headers={
                 "X-Master-Key": JSONBIN_API_KEY,
                 "Content-Type": "application/json"
+                "X-Bin-Versioning": "false"
             },
             json={"missed_words": missed_words_list},
             timeout=5
@@ -141,3 +142,4 @@ def alt_pronounce_word():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
