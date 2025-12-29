@@ -11,7 +11,7 @@ import requests
 # --------- Vercel Blob Configuration ---------
 VERCEL_BLOB_TOKEN = os.environ.get("BLOB_READ_WRITE_TOKEN", "YOUR_BLOB_TOKEN_HERE")
 BUCKET = os.environ.get("VERCEL_BLOB_BUCKET", "your-bucket-name")
-BLOB_FILENAME = os.environ.get("VERCEL_BLOB_FILENAME", "missed_words.json")
+BLOB_FILENAME = "missed_words.json"
 BLOB_URL = f"https://blob.vercel-storage.com/{BUCKET}/{BLOB_FILENAME}"
 
 # --------- Flask App and Template Config ---------
@@ -267,4 +267,5 @@ def alt_pronounce_word():
 if __name__ == "__main__":
     initialize_missed_words_file()
     app.run(debug=True)
+
 
