@@ -6,87 +6,76 @@ import tempfile
 import io
 import time
 import json
+import requests
 
-# Set explicit template folder (solves deployment issues like on Vercel)
+# --------- Vercel Blob Configuration ---------
+VERCEL_BLOB_TOKEN = os.environ.get("BLOB_READ_WRITE_TOKEN", "YOUR_BLOB_TOKEN_HERE")
+BUCKET = os.environ.get("VERCEL_BLOB_BUCKET", "your-bucket-name")
+BLOB_FILENAME = os.environ.get("VERCEL_BLOB_FILENAME", "missed_words.json")
+BLOB_URL = f"https://blob.vercel-storage.com/{BUCKET}/{BLOB_FILENAME}"
+
+# --------- Flask App and Template Config ---------
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
-
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
-# ==================== JSON FILE MANAGEMENT ====================
-
-def get_missed_words_file_path():
-    """Get the full path to the missed_words.json file"""
-    directory_path = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(directory_path, "missed_words.json")
-
-def initialize_missed_words_file():
-    """Create the missed_words.json file if it doesn't exist"""
-    file_path = get_missed_words_file_path()
-    if not os.path.exists(file_path):
-        with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump({"missed_words": []}, f, indent=2)
-
+# --------- Missed Words Management Using Vercel Blob ---------
 def load_missed_words():
-    """Load missed words from the JSON file"""
-    try:
-        with open(get_missed_words_file_path(), 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            return data.get("missed_words", [])
-    except (FileNotFoundError, json.JSONDecodeError):
+    headers = {"Authorization": f"Bearer {VERCEL_BLOB_TOKEN}"}
+    r = requests.get(BLOB_URL, headers=headers)
+    if r.status_code == 200:
+        data = r.json()
+        return data.get("missed_words", [])
+    else:
         return []
 
 def save_missed_words(missed_words_list):
-    """Save missed words to the JSON file"""
-    try:
-        with open(get_missed_words_file_path(), 'w', encoding='utf-8') as f:
-            json.dump({"missed_words":  missed_words_list}, f, indent=2)
-    except Exception as e:
-        print(f"Error saving missed words: {e}")
+    content = json.dumps({"missed_words": missed_words_list})
+    headers = {
+        "Authorization": f"Bearer {VERCEL_BLOB_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    r = requests.put(BLOB_URL, headers=headers, data=content)
+    return r.status_code == 200
+
+def initialize_missed_words_file():
+    # Only create if not exists; call on app startup if desired
+    words = load_missed_words()
+    if words == []:
+        save_missed_words([])
 
 def add_missed_word(word):
-    """Add a word to the missed words list"""
     missed_words = load_missed_words()
-    word_exists = any(w["word"] == word for w in missed_words)
+    word_exists = False
+    for w in missed_words:
+        if w["word"] == word:
+            w["attempts"] += 1
+            word_exists = True
+            break
     if not word_exists:
         missed_words.append({
             "word": word,
             "attempts": 1,
             "correct": 0
         })
-    else:
-        for w in missed_words:
-            if w["word"] == word:
-                w["attempts"] += 1
-                break
     save_missed_words(missed_words)
 
 def remove_missed_word(word):
-    """Remove a word from the missed words list when answered correctly"""
     missed_words = load_missed_words()
-    missed_words = [w for w in missed_words if w["word"] != word]
-    save_missed_words(missed_words)
+    updated = [w for w in missed_words if w["word"] != word]
+    save_missed_words(updated)
 
-# ==================== WEIGHTED WORD SELECTION ====================
-
-def get_missed_words_set():
-    """Get a set of missed words for quick lookup"""
+def get_missed_words_dict():
     missed_words = load_missed_words()
-    return {w["word"] for w in missed_words}
+    return {w["word"]: w["attempts"] for w in missed_words}
 
+# --------- Weighted Selection ---------
 def rng_word_ids_with_weighting(word_list, start_index, end_index, num_words, weight_missed=True):
     """
-    Select word IDs with adaptive weighting for missed words.
-    Words are weighted based on how many times they were missed:
-    - Missed 1 time: 2x weight
-    - Missed 2 times: 3x weight
-    - Missed 3+ times: 5x weight
+    Weighted random selection of word IDs based on miss frequency.
     """
     if not (1 <= start_index <= end_index <= 1500):
         return []
-
-    missed_words = load_missed_words()
-    missed_words_dict = {w["word"]: w["attempts"] for w in missed_words}
-
+    missed_words_dict = get_missed_words_dict()
     weighted_ids = []
     for word_id in range(start_index, end_index + 1):
         if word_id <= len(word_list):
@@ -103,25 +92,18 @@ def rng_word_ids_with_weighting(word_list, start_index, end_index, num_words, we
             else:
                 weighted_ids.append(word_id)
     random.shuffle(weighted_ids)
-    selected = list(dict.fromkeys(weighted_ids))[:num_words]  # Remove duplicates, preserve order
+    selected = list(dict.fromkeys(weighted_ids))[:num_words]  # De-duplicate, preserve order
     return selected
 
-# ==================== ORIGINAL FUNCTIONS ====================
-
+# --------- Local Word List Helpers ---------
 def load_word_list(filename):
     directory_path = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(directory_path, filename)
     try:
         with open(file_path, "r", encoding="utf-8") as file:
             return [line.strip() for line in file]
-    except FileNotFoundError:
-        print(f"File '{filename}' not found in '{directory_path}'.")
-        return []
-    except IOError as e:
-        print(f"Error reading file '{filename}': {e}")
-        return []
     except Exception as e:
-        print(f"Unexpected error:  {e}")
+        print(f"[Error] {e}")
         return []
 
 current_word_idx = 0
@@ -129,20 +111,8 @@ main_contest_words = []
 wrong_words = []
 badwords = ["unwittingly", "masculinity", "crampons", "Erlenmeyer flask", "metabolically", "exclusivity", "klutzy", "expostulatory", "Wilderness Road", "peregrinator", "eeriest", "emaciation", "Tyrrhenian Sea", "epistemologist", "Russophobia", "missa cantata", "nightmarishly", "verde antique", "debauched", "noteworthiness", "tonka bean", "Catch-22, catch-22", "agronomic", "minimization", "fortidudinous", "Nazification", "discomfited", "Louis Quatorze", "confabulation", "Himalaya Mountains", "pas de deux", "breviaries", "mismanagement", "ostensibly", "esprit de corps", "pseudonymous", "calibrator", "disengagement", "panacean", "condolatory", "deforestation", "compensatory", "Jekyll and Hyde", "euphoric", "permissibility", "fungicidal", "minute of arc", "herpetologist", "khapra beetle", "ferocity", "allurement", "prima donna", "infallibility", "electability", "afforestation", "extortioner", "admissibility", "chambered nautilus", "subornation", "mobocratic", "hoisin sauce", "Creutzfeldt-Jakob disease", "dinosaurian", "submergence", "sanctum sanctorum", "caveat emptor", "Stanford-Binet test", "infallibility", "xeroderma pigmentosum", "transitionary", "grievousness", "destabilization", "Qattara Depression", "brotherliness", "queued", "cingulate", "creativity", "comelier", "interleukin-1", "in vivo", "Snellen chart", "Komodo dragon", "manorial", "disinterred", "Ferris wheel", "proclivities", "assurgency", "indecisiveness", "Pillars of Hercules", "reunification", "ravening", "stippled", "unification", "Pavlovian", "amphorae", "Wahhabism", "foramina", "genealogist", "outsourcing", "chronicled", "sarcoptic mange", "maceration", "Malthusian", "predominately", "scoundrelly", "obsolescence", "recidivist", "offensiveness", "validation", "organically", "enigmatical", "San Andreas Fault", "arraignment", "nonexistent", "Van Allen belt"]
 
-def select_words(word_list, word_list_IDS):
-    selected_words = []
-    for id in word_list_IDS:
-        selected_words.append(word_list[id-1])
-    return selected_words
 
-def rng_word_ids(start_index, end_index, num_words):
-    if 1 <= start_index <= end_index <= 1500:
-        selected_words = [*range(start_index, end_index+1)]
-        random.shuffle(selected_words)
-        return selected_words[:num_words]
-    else:
-        return []
-
+# --------- Pronunciation ---------
 def generate_and_play_word_alternate(word):
     tts = gTTS(text=word, lang='en')
     current_time = int(time.time())
@@ -156,6 +126,32 @@ def generate_and_play_word_alternate(word):
         pass
     return audio_data
 
+def get_and_play_word(wordNum):
+    directory_path = os.path.dirname(os.path.abspath(__file__))
+    folder_path = os.path.join(directory_path, "audiofiles")
+    if 0 < wordNum < 501:
+        subfolder_path = os.path.join(folder_path, "500")
+    elif 500 < wordNum < 1001:
+        subfolder_path = os.path.join(folder_path, "1000")
+    elif 1000 < wordNum < 1501:
+        subfolder_path = os.path.join(folder_path, "1500")
+    else:
+        subfolder_path = folder_path
+    file_path = os.path.join(subfolder_path, str(wordNum) + ".wav")
+    mp3_file_path = os.path.join(subfolder_path, str(wordNum) + ".mp3")
+    error_file_path = os.path.join(folder_path, "noxious.mp3")
+    try:
+        audio_data = open(file_path, 'rb').read()
+    except Exception:
+        try:
+            audio_data = open(mp3_file_path, 'rb').read()
+        except:
+            audio_data = open(error_file_path, 'rb').read()
+    if random.random() < .003:
+        audio_data = open(error_file_path, 'rb').read()
+    return audio_data
+
+# --------- Word-Checking ---------
 def check_word(user_input):
     global current_word_idx, main_contest_words, main_contest_word_IDS
     if current_word_idx < len(main_contest_words):
@@ -170,12 +166,15 @@ def check_word(user_input):
             return feedback
     return False
 
+# --------- Main Routes ---------
 @app.route("/", methods=["GET", "POST"])
 def index():
     global current_word_idx, main_contest_words, main_contest_word_IDS, wrong_words, filename
 
-    file_names = ["2025.txt", "2024.txt", "2023.txt", "2022.txt", "2021.txt", "2020.txt", "2019.txt", "missedwords.txt"]
-
+    file_names = [
+        "2025.txt", "2024.txt", "2023.txt", "2022.txt", "2021.txt",
+        "2020.txt", "2019.txt", "missedwords.txt"
+    ]
     if request.method == "POST":
         filename = request.form["filename"]
         start_index = int(request.form["start_index"])
@@ -184,9 +183,10 @@ def index():
         word_list = load_word_list(filename)
         if not word_list:
             return render_template("index.html", file_names=file_names, error_message=f"Failed to load word list from '{filename}'.")
-        # Weighted selection unless doing missedwords.txt explicitly
         if filename == "missedwords.txt":
-            main_contest_word_IDS = rng_word_ids(start_index, end_index, num_words)
+            main_contest_word_IDS = list(range(start_index, min(end_index+1, len(word_list)+1)))
+            random.shuffle(main_contest_word_IDS)
+            main_contest_word_IDS = main_contest_word_IDS[:num_words]
         else:
             main_contest_word_IDS = rng_word_ids_with_weighting(word_list, start_index, end_index, num_words, weight_missed=True)
         main_contest_words.clear()
@@ -240,31 +240,6 @@ def contest():
     else:
         return redirect(url_for("index"))
 
-def get_and_play_word(wordNum):
-    directory_path = os.path.dirname(os.path.abspath(__file__))
-    folder_path = os.path.join(directory_path, "audiofiles")
-    if 0 < wordNum < 501:
-        subfolder_path = os.path.join(folder_path, "500")
-    elif 500 < wordNum < 1001:
-        subfolder_path = os.path.join(folder_path, "1000")
-    elif 1000 < wordNum < 1501:
-        subfolder_path = os.path.join(folder_path, "1500")
-    else:
-        subfolder_path = folder_path
-    file_path = os.path.join(subfolder_path, str(wordNum) + ".wav")
-    mp3_file_path = os.path.join(subfolder_path, str(wordNum) + ".mp3")
-    error_file_path = os.path.join(folder_path, "noxious.mp3")
-    try:
-        audio_data = open(file_path, 'rb').read()
-    except Exception:
-        try:
-            audio_data = open(mp3_file_path, 'rb').read()
-        except:
-            audio_data = open(error_file_path, 'rb').read()
-    if random.random() < .003:
-        audio_data = open(error_file_path, 'rb').read()
-    return audio_data
-
 @app.route("/pronounce")
 def pronounce_word():
     global current_word_idx, main_contest_words, main_contest_word_IDS, badwords, filename
@@ -292,4 +267,3 @@ def alt_pronounce_word():
 if __name__ == "__main__":
     initialize_missed_words_file()
     app.run(debug=True)
-
