@@ -110,11 +110,16 @@
             <button type="submit">Submit</button>
         </form>
         <script>
-            {% if feedback %}
-                var audio = document.getElementById('audio-player');
-                playWhenReady(audio, "{{ audio_url }}");
-            {% endif %}
+            window.addEventListener("load", function () {
+                var audio = document.getElementById("audio-player");
+                var src = "{{ audio_url }}";
+        
+                if (src) {
+                    playWhenReady(audio, src);
+                }
+            });
         </script>
+
         <div>
             <p>Score: {{ current_word_idx }}/{{ total_words }}</p>
         </div>
@@ -211,4 +216,5 @@
 
 </body>
 </html>
+
 
