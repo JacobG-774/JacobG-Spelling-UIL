@@ -241,13 +241,15 @@ def index():
         current_word_idx = 0
         wrong_words = []
 
-        audio_data = get_and_play_word(main_contest_word_IDS[0])
+        timestamp = int(time.time())
+        audio_url = f"/pronounce?ts={timestamp}"
+        
         return render_template(
             "contest.html",
             current_word_idx=0,
             total_words=len(main_contest_words),
             feedback=None,
-            audio_data=audio_data
+            audio_url=audio_url
         )
 
     return render_template("index.html", file_names=file_names)
@@ -268,13 +270,15 @@ def contest():
         wrong_words.append((main_contest_words[current_word_idx], user_input))
 
     if current_word_idx < len(main_contest_words):
-        audio_data = get_and_play_word(main_contest_word_IDS[current_word_idx])
+        timestamp = int(time.time())
+        audio_url = f"/pronounce?ts={timestamp}"
+        
         return render_template(
             "contest.html",
             current_word_idx=current_word_idx,
             total_words=len(main_contest_words),
             feedback=feedback,
-            audio_data=audio_data,
+            audio_url=audio_url,
             wrong_words=wrong_words
         )
 
@@ -303,3 +307,4 @@ def pronounce_word():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
