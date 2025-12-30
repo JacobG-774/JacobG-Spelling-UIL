@@ -6,6 +6,7 @@ import tempfile
 import io
 import time
 import requests
+import threading
 
 # ============================================================
 # JSONBIN CONFIGURATION
@@ -85,7 +86,7 @@ def add_missed_word(word):
     for w in missed_words:
         if w["word"] == word:
             w["attempts"] += 1
-            save_missed_words()
+            threading.Thread(target=save_missed_words, daemon=True).start()
             return
 
     missed_words.append({
@@ -93,8 +94,7 @@ def add_missed_word(word):
         "attempts": 1,
         "correct": 0
     })
-    save_missed_words()
-
+    threading.Thread(target=save_missed_words, daemon=True).start()
 
 def get_missed_words_dict():
     return {w["word"]: w["attempts"] for w in load_missed_words()}
@@ -307,4 +307,5 @@ def pronounce_word():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
